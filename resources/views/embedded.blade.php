@@ -15,6 +15,8 @@
 @section('scripts')
     @parent
     <ui-nav-menu>
+        <a href="{{ route('home') }}" rel="home">Dashboard</a>
+        <a href="{{ route('products.index') }}">Products</a>
     </ui-nav-menu>
 
     <script>
