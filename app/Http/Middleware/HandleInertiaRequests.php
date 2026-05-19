@@ -2,10 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
+use Illuminate\Http\Request;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -26,7 +25,7 @@ class HandleInertiaRequests extends Middleware
     /**
      * Determine the current asset version.
      */
-    public function version(Request $request): ?string
+    public function version(Request $request): string|null
     {
         return parent::version($request);
     }
@@ -40,12 +39,13 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => Auth::user(),
+                'user' => $request->user(),
             ],
             'ziggy' => function () use ($request) {
+                // $request->query()
                 return array_merge((new Ziggy)->toArray(), [
                     'location' => $request->url(),
-                    'query' => $request->query(),
+                    'query' => collect($request->query())->except(['hmac', 'session', 'timestamp'])->all(),
                 ]);
             },
         ]);

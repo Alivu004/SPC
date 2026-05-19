@@ -2,6 +2,7 @@ import { router, usePage } from '@inertiajs/react';
 import {
     HomeIcon,
     ProductIcon,
+    AutomationIcon,
 } from '@shopify/polaris-icons';
 import { Navigation } from '@shopify/polaris';
 
@@ -29,6 +30,13 @@ export default function AppNav() {
                         url: '/products',
                         selected: url.startsWith('/products'),
                         onClick: () => go('/products'),
+                    },
+                    {
+                        label: 'Rules',
+                        icon: AutomationIcon,
+                        url: '/rules',
+                        selected: url.startsWith('/rules'),
+                        onClick: () => go('/rules'),
                     },
                 ]}
             />

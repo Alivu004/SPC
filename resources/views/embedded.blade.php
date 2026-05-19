@@ -17,6 +17,7 @@
     <ui-nav-menu>
         <a href="{{ route('home') }}" rel="home">Dashboard</a>
         <a href="{{ route('products.index') }}">Products</a>
+        <a href="{{ route('rules.index') }}">Rules</a>
     </ui-nav-menu>
 
     <script>

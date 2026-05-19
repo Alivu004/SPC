@@ -1,0 +1,44 @@
+import { useState } from 'react';
+import { router, usePage } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/Embedded/AuthenticatedLayout';
+import { BlockStack, Page } from '@shopify/polaris';
+import RuleForm from '@/Components/Rules/RuleForm';
+
+// ─── Create Rule Page ─────────────────────────────────────────────────────────
+
+export default function Create() {
+    const query = usePage().props?.ziggy?.query ?? {};
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = (data) => {
+        setLoading(true);
+
+        router.post(route('rules.store', query), data, {
+            onSuccess: () => setLoading(false),
+            onError:   () => setLoading(false),
+        });
+    };
+
+    const goToIndex = () => router.get(route('rules.index', query));
+
+    return (
+        <AuthenticatedLayout>
+            <Page
+                title="Create Rule"
+                subtitle="Set up conditions to automatically classify products and assign a status."
+                backAction={{
+                    content:  'Rules',
+                    onAction: goToIndex,
+                }}
+            >
+                <BlockStack gap="500">
+                    <RuleForm
+                        onSubmit={handleSubmit}
+                        loading={loading}
+                        onCancel={goToIndex}
+                    />
+                </BlockStack>
+            </Page>
+        </AuthenticatedLayout>
+    );
+}
