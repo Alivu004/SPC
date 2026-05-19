@@ -7,31 +7,31 @@ import RuleForm from '@/Components/Rules/RuleForm';
 // ─── Static Fallback Data (used when no backend prop is provided) ──────────────
 
 const SAMPLE_RULE = {
-    id:             1,
-    name:           'Slow Moving Products',
-    description:    'Identifies products that have high inventory but low recent sales activity.',
-    assignedStatus: 'slow',
-    matchType:      'ALL',
-    priority:       10,
-    isActive:       true,
+    id:                1,
+    name:              'Slow Moving Products',
+    description:       'Identifies products that have high inventory but low recent sales activity.',
+    product_status_id: 2,
+    match_type:        'all',
+    priority:          10,
+    is_active:         true,
     conditions: [
-        { field: 'total_inventory', operator: 'greater_than', value: '50' },
-        { field: 'shopify_status',  operator: 'equals',       value: 'active' },
+        { field_key: 'total_inventory', operator: 'greater_than', value: '50',     value_type: '' },
+        { field_key: 'shopify_status',  operator: 'equals',       value: 'active', value_type: '' },
     ],
 };
 
 // ─── Edit Rule Page ───────────────────────────────────────────────────────────
 
-export default function Edit({ rule: serverRule }) {
-    const rule  = serverRule ?? SAMPLE_RULE;
-    const query = usePage().props?.ziggy?.query ?? {};
+export default function Edit({ rule: serverRule, product_statuses, allowed_field_keys, allowed_operators }) {
+    const rule       = serverRule ?? SAMPLE_RULE;
+    const { errors } = usePage().props;
+    const query      = usePage().props?.ziggy?.query ?? {};
 
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = (data) => {
         setLoading(true);
-
-        router.put(route('rules.update', { id: rule.id, ...query }), data, {
+        router.put(route('rules.update', { rule: rule.id, ...query }), data, {
             onSuccess: () => setLoading(false),
             onError:   () => setLoading(false),
         });
@@ -52,6 +52,10 @@ export default function Edit({ rule: serverRule }) {
                 <BlockStack gap="500">
                     <RuleForm
                         initialValues={rule}
+                        productStatuses={product_statuses}
+                        fieldKeyOptions={allowed_field_keys}
+                        operatorOptions={allowed_operators}
+                        serverErrors={errors}
                         onSubmit={handleSubmit}
                         loading={loading}
                         onCancel={goToIndex}

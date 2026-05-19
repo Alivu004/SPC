@@ -6,13 +6,13 @@ import RuleForm from '@/Components/Rules/RuleForm';
 
 // ─── Create Rule Page ─────────────────────────────────────────────────────────
 
-export default function Create() {
-    const query = usePage().props?.ziggy?.query ?? {};
+export default function Create({ product_statuses, allowed_field_keys, allowed_operators }) {
+    const { errors } = usePage().props;
+    const query      = usePage().props?.ziggy?.query ?? {};
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = (data) => {
         setLoading(true);
-
         router.post(route('rules.store', query), data, {
             onSuccess: () => setLoading(false),
             onError:   () => setLoading(false),
@@ -33,6 +33,10 @@ export default function Create() {
             >
                 <BlockStack gap="500">
                     <RuleForm
+                        productStatuses={product_statuses}
+                        fieldKeyOptions={allowed_field_keys}
+                        operatorOptions={allowed_operators}
+                        serverErrors={errors}
                         onSubmit={handleSubmit}
                         loading={loading}
                         onCancel={goToIndex}

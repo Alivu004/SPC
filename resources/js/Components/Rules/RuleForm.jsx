@@ -18,51 +18,51 @@ import {
 } from '@shopify/polaris';
 import { PlusIcon, XSmallIcon } from '@shopify/polaris-icons';
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// ─── Static Fallbacks (used when backend props are not yet wired) ─────────────
 
-const PRODUCT_FIELD_OPTIONS = [
-    { label: 'Title', value: 'title' },
-    { label: 'Vendor', value: 'vendor' },
-    { label: 'Product Type', value: 'product_type' },
-    { label: 'Shopify Status', value: 'shopify_status' },
-    { label: 'Tags', value: 'tags' },
-    { label: 'Total Inventory', value: 'total_inventory' },
-    { label: 'Variants Count', value: 'variants_count' },
-    { label: 'Min Price', value: 'min_price' },
-    { label: 'Max Price', value: 'max_price' },
-    { label: 'Has Image', value: 'has_image' },
-    { label: 'Has Description', value: 'has_description' },
-    { label: 'Published At', value: 'published_at' },
-    { label: 'Created At (Shopify)', value: 'created_at_shopify' },
-    { label: 'Updated At (Shopify)', value: 'updated_at_shopify' },
+const STATIC_FIELD_OPTIONS = [
+    { label: 'Title',                 value: 'title' },
+    { label: 'Vendor',                value: 'vendor' },
+    { label: 'Product Type',          value: 'product_type' },
+    { label: 'Shopify Status',        value: 'shopify_status' },
+    { label: 'Tags',                  value: 'tags' },
+    { label: 'Total Inventory',       value: 'total_inventory' },
+    { label: 'Variants Count',        value: 'variants_count' },
+    { label: 'Min Price',             value: 'min_price' },
+    { label: 'Max Price',             value: 'max_price' },
+    { label: 'Has Image',             value: 'has_image' },
+    { label: 'Has Description',       value: 'has_description' },
+    { label: 'Published At',          value: 'published_at' },
+    { label: 'Created At (Shopify)',  value: 'created_at_shopify' },
+    { label: 'Updated At (Shopify)',  value: 'updated_at_shopify' },
 ];
 
-const OPERATOR_OPTIONS = [
-    { label: 'Equals', value: 'equals' },
-    { label: 'Not Equals', value: 'not_equals' },
-    { label: 'Contains', value: 'contains' },
-    { label: 'Does Not Contain', value: 'does_not_contain' },
-    { label: 'Greater Than', value: 'greater_than' },
-    { label: 'Less Than', value: 'less_than' },
+const STATIC_OPERATOR_OPTIONS = [
+    { label: 'Equals',                value: 'equals' },
+    { label: 'Not Equals',            value: 'not_equals' },
+    { label: 'Contains',              value: 'contains' },
+    { label: 'Does Not Contain',      value: 'does_not_contain' },
+    { label: 'Greater Than',          value: 'greater_than' },
+    { label: 'Less Than',             value: 'less_than' },
     { label: 'Greater Than or Equal', value: 'greater_than_or_equal' },
-    { label: 'Less Than or Equal', value: 'less_than_or_equal' },
-    { label: 'Is Empty', value: 'is_empty' },
-    { label: 'Is Not Empty', value: 'is_not_empty' },
-    { label: 'Older Than (days)', value: 'older_than_days' },
-    { label: 'Within Last (days)', value: 'within_last_days' },
+    { label: 'Less Than or Equal',    value: 'less_than_or_equal' },
+    { label: 'Is Empty',              value: 'is_empty' },
+    { label: 'Is Not Empty',          value: 'is_not_empty' },
+    { label: 'Older Than (days)',      value: 'older_than_days' },
+    { label: 'Within Last (days)',     value: 'within_last_days' },
 ];
 
-const ASSIGN_STATUS_OPTIONS = [
-    { label: 'Active', value: 'active' },
-    { label: 'Slow', value: 'slow' },
-    { label: 'Inactive', value: 'inactive' },
-    { label: 'Needs Attention', value: 'needs_attention' },
-    { label: 'Overstocked', value: 'overstocked' },
+const STATIC_STATUS_OPTIONS = [
+    { label: 'Active',          value: 1, slug: 'active' },
+    { label: 'Slow',            value: 2, slug: 'slow' },
+    { label: 'Inactive',        value: 3, slug: 'inactive' },
+    { label: 'Needs Attention', value: 4, slug: 'needs_attention' },
+    { label: 'Overstocked',     value: 5, slug: 'overstocked' },
 ];
 
 const MATCH_TYPE_OPTIONS = [
-    { label: 'ALL — Every condition must match', value: 'ALL' },
-    { label: 'ANY — At least one condition must match', value: 'ANY' },
+    { label: 'ALL — Every condition must match',         value: 'all' },
+    { label: 'ANY — At least one condition must match', value: 'any' },
 ];
 
 export const STATUS_TONE = {
@@ -73,32 +73,35 @@ export const STATUS_TONE = {
     overstocked:     'info',
 };
 
-const DEFAULT_CONDITION = { field: 'title', operator: 'equals', value: '' };
+const DEFAULT_CONDITION = { field_key: 'title', operator: 'equals', value: '', value_type: '' };
 
 // ─── Condition Row ────────────────────────────────────────────────────────────
 
-function ConditionRow({ condition, index, onUpdate, onRemove, canRemove }) {
+function ConditionRow({ condition, index, fieldOptions, operatorOptions, onUpdate, onRemove, canRemove, errors }) {
     return (
         <Box background="bg-surface-secondary" padding="300" borderRadius="200">
             <InlineGrid columns={['1fr', '1fr', '1.2fr', 'auto']} gap="200" alignItems="end">
                 <Select
                     label="Field"
-                    options={PRODUCT_FIELD_OPTIONS}
-                    value={condition.field}
-                    onChange={(value) => onUpdate(index, 'field', value)}
+                    options={fieldOptions}
+                    value={condition.field_key}
+                    onChange={(value) => onUpdate(index, 'field_key', value)}
+                    error={errors?.[`conditions.${index}.field_key`]}
                 />
                 <Select
                     label="Operator"
-                    options={OPERATOR_OPTIONS}
+                    options={operatorOptions}
                     value={condition.operator}
                     onChange={(value) => onUpdate(index, 'operator', value)}
+                    error={errors?.[`conditions.${index}.operator`]}
                 />
                 <TextField
                     label="Value"
                     placeholder="Enter value..."
-                    value={condition.value}
+                    value={condition.value ?? ''}
                     onChange={(value) => onUpdate(index, 'value', value)}
                     autoComplete="off"
+                    error={errors?.[`conditions.${index}.value`]}
                 />
                 <Box paddingBlockStart="500">
                     <Button
@@ -117,10 +120,10 @@ function ConditionRow({ condition, index, onUpdate, onRemove, canRemove }) {
 
 // ─── Rule Preview Card ────────────────────────────────────────────────────────
 
-function RulePreview({ ruleName, matchType, conditions, assignedStatus }) {
-    const statusLabel =
-        ASSIGN_STATUS_OPTIONS.find((o) => o.value === assignedStatus)?.label ?? assignedStatus;
-    const tone = STATUS_TONE[assignedStatus] ?? 'info';
+function RulePreview({ ruleName, matchType, conditions, statusId, statusOptions, fieldOptions, operatorOptions }) {
+    const selectedStatus = statusOptions.find((s) => String(s.value) === String(statusId));
+    const statusLabel    = selectedStatus?.label ?? '—';
+    const tone           = STATUS_TONE[selectedStatus?.slug] ?? 'info';
 
     return (
         <BlockStack gap="300">
@@ -141,17 +144,17 @@ function RulePreview({ ruleName, matchType, conditions, assignedStatus }) {
             <Divider />
 
             <Text variant="bodySm" tone="subdued">
-                If <strong>{matchType}</strong> of these conditions match:
+                If <strong>{matchType?.toUpperCase()}</strong> of these conditions match:
             </Text>
 
             <Box background="bg-surface-secondary" padding="200" borderRadius="100">
                 <BlockStack gap="100">
                     {conditions.map((cond, i) => {
                         const fieldLabel =
-                            PRODUCT_FIELD_OPTIONS.find((o) => o.value === cond.field)?.label ??
-                            cond.field;
+                            fieldOptions.find((o) => o.value === cond.field_key)?.label ??
+                            cond.field_key;
                         const opLabel =
-                            OPERATOR_OPTIONS.find((o) => o.value === cond.operator)?.label ??
+                            operatorOptions.find((o) => o.value === cond.operator)?.label ??
                             cond.operator;
 
                         return (
@@ -186,24 +189,59 @@ function RulePreview({ ruleName, matchType, conditions, assignedStatus }) {
 
 // ─── Main RuleForm Component ──────────────────────────────────────────────────
 
+/**
+ * Props:
+ *   initialValues   – pre-filled data (backend shape)
+ *   productStatuses – [{ label, value (id), slug, color }]
+ *   fieldKeyOptions – string[] from config  (fallback to static)
+ *   operatorOptions – string[] from config  (fallback to static)
+ *   serverErrors    – Inertia page errors object
+ *   onSubmit(data)  – called with backend-shaped payload
+ *   loading         – bool
+ *   onCancel        – fn
+ */
 export default function RuleForm({
-    initialValues = {},
+    initialValues   = {},
+    productStatuses,
+    fieldKeyOptions,
+    operatorOptions: operatorKeys,
+    serverErrors    = {},
     onSubmit,
-    loading = false,
+    loading         = false,
     onCancel,
 }) {
-    const [name, setName]                   = useState(initialValues.name        ?? '');
-    const [description, setDescription]     = useState(initialValues.description ?? '');
-    const [assignedStatus, setAssignedStatus] = useState(initialValues.assignedStatus ?? 'active');
-    const [matchType, setMatchType]         = useState(initialValues.matchType   ?? 'ALL');
-    const [priority, setPriority]           = useState(String(initialValues.priority ?? '1'));
-    const [isActive, setIsActive]           = useState(initialValues.isActive    ?? true);
-    const [conditions, setConditions]       = useState(
+    // ── Build dropdown option arrays ────────────────────────────────────────────
+
+    const statusOptions = productStatuses?.length ? productStatuses : STATIC_STATUS_OPTIONS;
+
+    const fieldOptions = fieldKeyOptions?.length
+        ? fieldKeyOptions.map((k) => STATIC_FIELD_OPTIONS.find((o) => o.value === k) ?? { label: k, value: k })
+        : STATIC_FIELD_OPTIONS;
+
+    const operatorOptions = operatorKeys?.length
+        ? operatorKeys.map((k) => STATIC_OPERATOR_OPTIONS.find((o) => o.value === k) ?? { label: k, value: k })
+        : STATIC_OPERATOR_OPTIONS;
+
+    // ── Form state (backend field names) ────────────────────────────────────────
+
+    const [name, setName]               = useState(initialValues.name              ?? '');
+    const [description, setDescription] = useState(initialValues.description       ?? '');
+    const [statusId, setStatusId]       = useState(String(initialValues.product_status_id ?? statusOptions[0]?.value ?? ''));
+    const [matchType, setMatchType]     = useState(initialValues.match_type        ?? 'all');
+    const [priority, setPriority]       = useState(String(initialValues.priority   ?? '1'));
+    const [isActive, setIsActive]       = useState(initialValues.is_active         ?? true);
+    const [conditions, setConditions]   = useState(
         initialValues.conditions?.length
-            ? initialValues.conditions
+            ? initialValues.conditions.map((c) => ({
+                field_key:  c.field_key  ?? 'title',
+                operator:   c.operator   ?? 'equals',
+                value:      c.value      ?? '',
+                value_type: c.value_type ?? '',
+            }))
             : [{ ...DEFAULT_CONDITION }],
     );
-    const [errors, setErrors] = useState({});
+    const [localErrors, setLocalErrors] = useState({});
+    const errors = { ...serverErrors, ...localErrors };
 
     // ── Condition handlers ────────────────────────────────────────────────────
 
@@ -227,13 +265,10 @@ export default function RuleForm({
 
     const validate = () => {
         const errs = {};
-        if (!name.trim()) {
-            errs.name = 'Rule name is required.';
-        }
-        if (!priority || isNaN(Number(priority)) || Number(priority) < 1) {
-            errs.priority = 'Priority must be a positive number.';
-        }
-        setErrors(errs);
+        if (!name.trim())                                                     errs.name              = 'Rule name is required.';
+        if (!priority || isNaN(Number(priority)) || Number(priority) < 1)    errs.priority          = 'Priority must be a positive number.';
+        if (!statusId)                                                        errs.product_status_id = 'Please select a status.';
+        setLocalErrors(errs);
         return Object.keys(errs).length === 0;
     };
 
@@ -242,11 +277,11 @@ export default function RuleForm({
         onSubmit?.({
             name,
             description,
-            assignedStatus,
-            matchType,
-            priority: Number(priority),
-            isActive,
-            conditions,
+            product_status_id: Number(statusId),
+            match_type:        matchType,
+            priority:          Number(priority),
+            is_active:         isActive,
+            conditions:        conditions.map((c, i) => ({ ...c, sort_order: i })),
         });
     };
 
@@ -288,9 +323,10 @@ export default function RuleForm({
                                 <FormLayout.Group>
                                     <Select
                                         label="Assign Status"
-                                        options={ASSIGN_STATUS_OPTIONS}
-                                        value={assignedStatus}
-                                        onChange={setAssignedStatus}
+                                        options={statusOptions.map((s) => ({ label: s.label, value: String(s.value) }))}
+                                        value={String(statusId)}
+                                        onChange={setStatusId}
+                                        error={errors.product_status_id}
                                         helpText="Status applied to matching products"
                                     />
                                     <Select
@@ -328,8 +364,8 @@ export default function RuleForm({
                                 <Text variant="headingMd" as="h2">
                                     Conditions
                                 </Text>
-                                <Badge tone={matchType === 'ALL' ? 'info' : 'attention'}>
-                                    {matchType}
+                                <Badge tone={matchType === 'all' ? 'info' : 'attention'}>
+                                    {matchType.toUpperCase()}
                                 </Badge>
                             </InlineStack>
 
@@ -346,9 +382,12 @@ export default function RuleForm({
                                         key={index}
                                         condition={condition}
                                         index={index}
+                                        fieldOptions={fieldOptions}
+                                        operatorOptions={operatorOptions}
                                         onUpdate={updateCondition}
                                         onRemove={removeCondition}
                                         canRemove={conditions.length > 1}
+                                        errors={errors}
                                     />
                                 ))}
                             </BlockStack>
@@ -372,7 +411,10 @@ export default function RuleForm({
                             ruleName={name}
                             matchType={matchType}
                             conditions={conditions}
-                            assignedStatus={assignedStatus}
+                            statusId={statusId}
+                            statusOptions={statusOptions}
+                            fieldOptions={fieldOptions}
+                            operatorOptions={operatorOptions}
                         />
                     </Card>
 

@@ -18,57 +18,9 @@ import { Head, router, usePage } from '@inertiajs/react';
 
 // ─── Static Sample Data ───────────────────────────────────────────────────────
 
-const SAMPLE_RULES = [
-    {
-        id:              1,
-        name:            'Slow Moving Products',
-        assignedStatus:  'slow',
-        matchType:       'ALL',
-        priority:        10,
-        conditionsCount: 2,
-        isActive:        true,
-    },
-    {
-        id:              2,
-        name:            'Missing Product Content',
-        assignedStatus:  'needs_attention',
-        matchType:       'ANY',
-        priority:        8,
-        conditionsCount: 3,
-        isActive:        true,
-    },
-    {
-        id:              3,
-        name:            'High Inventory Products',
-        assignedStatus:  'overstocked',
-        matchType:       'ALL',
-        priority:        6,
-        conditionsCount: 1,
-        isActive:        false,
-    },
-    {
-        id:              4,
-        name:            'Recently Added Products',
-        assignedStatus:  'active',
-        matchType:       'ALL',
-        priority:        4,
-        conditionsCount: 2,
-        isActive:        true,
-    },
-];
-
-const STATUS_LABEL = {
-    active:          'Active',
-    slow:            'Slow',
-    inactive:        'Inactive',
-    needs_attention: 'Needs Attention',
-    overstocked:     'Overstocked',
-};
-
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export default function Index({ rules: serverRules }) {
-    const [rules, setRules] = useState(serverRules ?? SAMPLE_RULES);
+export default function Index({ rules = [] }) {
     const query = usePage().props?.ziggy?.query ?? {};
 
     // ── Delete modal state ────────────────────────────────────────────────────
@@ -88,38 +40,20 @@ export default function Index({ rules: serverRules }) {
 
     const handleConfirmDelete = useCallback(() => {
         if (!ruleToDelete) return;
-
         setDeleting(true);
-
-        // When backend is connected, replace this block with:
-        // router.delete(`/rules/${ruleToDelete.id}`, {
-        //     onSuccess: () => { closeDeleteModal(); setDeleting(false); },
-        //     onError:   () => setDeleting(false),
-        // });
-
-        // ── Static demo: remove from local state ──
-        setTimeout(() => {
-            setRules((prev) => prev.filter((r) => r.id !== ruleToDelete.id));
-            setDeleting(false);
-            closeDeleteModal();
-        }, 600);
-    }, [ruleToDelete, closeDeleteModal]);
+        router.delete(route('rules.destroy', { rule: ruleToDelete.id, ...query }), {
+            onSuccess: () => { setDeleting(false); closeDeleteModal(); },
+            onError:   () => setDeleting(false),
+        });
+    }, [ruleToDelete, closeDeleteModal, query]);
 
     // ── Toggle active status ──────────────────────────────────────────────────
 
     const handleToggle = useCallback((rule) => {
-        // When backend is connected, replace with:
-        // router.post(`/rules/${rule.id}/toggle-status`, {}, {
-        //     preserveState: true,
-        // });
-
-        // ── Static demo: flip local state ──
-        setRules((prev) =>
-            prev.map((r) =>
-                r.id === rule.id ? { ...r, isActive: !r.isActive } : r,
-            ),
-        );
-    }, []);
+        router.post(route('rules.toggle-status', { rule: rule.id, ...query }), {}, {
+            preserveScroll: true,
+        });
+    }, [query]);
 
     // ── Table headings ────────────────────────────────────────────────────────
 
@@ -164,15 +98,15 @@ export default function Index({ rules: serverRules }) {
 
             {/* Assigned Status */}
             <IndexTable.Cell>
-                <Badge tone={STATUS_TONE[rule.assignedStatus] ?? 'info'}>
-                    {STATUS_LABEL[rule.assignedStatus] ?? rule.assignedStatus}
+                <Badge tone={STATUS_TONE[rule.product_status?.slug] ?? 'info'}>
+                    {rule.product_status?.name ?? '—'}
                 </Badge>
             </IndexTable.Cell>
 
             {/* Match Type */}
             <IndexTable.Cell>
-                <Badge tone={rule.matchType === 'ALL' ? 'info' : 'attention'}>
-                    {rule.matchType}
+                <Badge tone={rule.match_type === 'all' ? 'info' : 'attention'}>
+                    {rule.match_type?.toUpperCase()}
                 </Badge>
             </IndexTable.Cell>
 
@@ -186,15 +120,15 @@ export default function Index({ rules: serverRules }) {
             {/* Conditions Count */}
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="span">
-                    {rule.conditionsCount}{' '}
-                    {rule.conditionsCount === 1 ? 'condition' : 'conditions'}
+                    {rule.conditions_count}{' '}
+                    {rule.conditions_count === 1 ? 'condition' : 'conditions'}
                 </Text>
             </IndexTable.Cell>
 
             {/* Active Status */}
             <IndexTable.Cell>
-                <Badge tone={rule.isActive ? 'success' : 'critical'}>
-                    {rule.isActive ? 'Active' : 'Inactive'}
+                <Badge tone={rule.is_active ? 'success' : 'critical'}>
+                    {rule.is_active ? 'Active' : 'Inactive'}
                 </Badge>
             </IndexTable.Cell>
 
@@ -204,23 +138,23 @@ export default function Index({ rules: serverRules }) {
                     <Button
                         size="slim"
                         icon={EditIcon}
-                        onClick={() => router.get(route('rules.edit', { id: rule.id, ...query }))}
+                        onClick={() => router.get(route('rules.edit', { rule: rule.id, ...query }))}
                         accessibilityLabel={`Edit ${rule.name}`}
                     >
                         Edit
                     </Button>
                     <Button
                         size="slim"
-                        variant={rule.isActive ? 'secondary' : 'primary'}
-                        tone={rule.isActive ? 'critical' : undefined}
+                        variant={rule.is_active ? 'secondary' : 'primary'}
+                        tone={rule.is_active ? 'critical' : undefined}
                         onClick={() => handleToggle(rule)}
                         accessibilityLabel={
-                            rule.isActive
+                            rule.is_active
                                 ? `Disable ${rule.name}`
                                 : `Enable ${rule.name}`
                         }
                     >
-                        {rule.isActive ? 'Disable' : 'Enable'}
+                        {rule.is_active ? 'Disable' : 'Enable'}
                     </Button>
                     <Button
                         size="slim"
