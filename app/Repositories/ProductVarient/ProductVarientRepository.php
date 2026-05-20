@@ -32,7 +32,10 @@ class ProductVarientRepository implements ProductVarientRepositoryInterface
     }
     public function updateOrCreate(array $data)
     {
-        $productVarient = $this->model->updateOrCreate($data);
+        $productVarient = $this->model->updateOrCreate(
+            ['shopify_product_Varient_id' => $data['shopify_product_Varient_id']],
+            $data
+        );
         return $productVarient;
     }
     public function delete(int $id)

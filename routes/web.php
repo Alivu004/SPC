@@ -23,6 +23,12 @@ Route::group(['middleware' => ['verify.shopify','verify.embedded']], function ()
     Route::put('/rules/{rule}',                   [ClassificationRuleController::class, 'update'])->name('rules.update');
     Route::delete('/rules/{rule}',                [ClassificationRuleController::class, 'destroy'])->name('rules.destroy');
     Route::post('/rules/{rule}/toggle-status',    [ClassificationRuleController::class, 'toggleStatus'])->name('rules.toggle-status');
+    // get all registered webhooks for the shop
+    Route::get('/webhooks', function () {
+        $shop = auth()->user();
+        $webhooks = $shop->api()->rest('GET', '/admin/api/2024-01/webhooks.json');
+        return $webhooks;
+    })->name('webhooks.index');
 
 });
 

@@ -146,7 +146,7 @@ trait ShopifyProductTrait
             'tags' => $product->tags,
             'vendor' => $product->vendor,
             'product_type' => $product->product_type,
-            'status' => $product->status,
+            'shopify_status' => $product->status,
             'variants' => $this->formatProductvarientData($product->variants),
             'media' => $this->formatProductMedia($product->media)
         ];

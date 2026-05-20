@@ -1,4 +1,6 @@
-<?php namespace App\Jobs;
+<?php
+
+namespace App\Jobs;
 
 use stdClass;
 use App\Models\User;
@@ -9,8 +11,10 @@ use App\Http\Traits\ShopifyProductTrait;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Log;
 use Osiset\ShopifyApp\Objects\Values\ShopDomain;
 use App\Repositories\Product\ProductRepositoryInterface;
+use App\Services\ProductClassificationService;
 use Osiset\ShopifyApp\Contracts\Queries\Shop as IShopQuery;
 
 
@@ -58,12 +62,27 @@ class ProductsCreateJob implements ShouldQueue
         $user = User::where('name', $shop->name)->first();
         $payload = $this->data;
 
+        // --- Existing product persistence (products table) ---
         $this->getProductRepository(app(ProductRepositoryInterface::class));
 
-        if($this->storeData($payload , $user )){
+        if ($this->storeData($payload, $user)) {
             $this->logData("Product Create Job Successfull.");
-        }else{
+        } else {
             $this->logData("Product Create Job Failed");
+        }
+
+        // --- Classification: upsert shopify_products + run rules ---
+        try {
+            // Convert stdClass/object payload to plain array for the service
+            $payloadArray = json_decode(json_encode($payload), true);
+            app(ProductClassificationService::class)
+                ->classifyProductFromWebhook($user, $payloadArray);
+        } catch (\Throwable $e) {
+            Log::error('[ProductsCreateJob] Classification failed: ' . $e->getMessage(), [
+                'shop'          => $shop->name,
+                'shopify_id'    => $payload->id ?? null,
+                'exception'     => $e,
+            ]);
         }
     }
 }

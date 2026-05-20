@@ -39,4 +39,9 @@ class ClassificationRule extends Model
     {
         return $this->hasMany(ClassificationCondition::class)->orderBy('sort_order');
     }
+
+    public function productClassifications(): HasMany
+    {
+        return $this->hasMany(ProductClassification::class);
+    }
 }

@@ -4,7 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Orders\Order;
-use app\Models\Products\Product;
+use App\Models\Products\Product;
 use Osiset\ShopifyApp\Traits\ShopModel;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -70,5 +70,13 @@ class User extends Authenticatable implements IShopModel
     public function classificationConditions()
     {
         return $this->hasMany(ClassificationCondition::class);
+    }
+    public function productClassifications()
+    {
+        return $this->hasMany(ProductClassification::class);
+    }
+    public function productClassificationHistories()
+    {
+        return $this->hasMany(ProductClassificationHistory::class);
     }
 }

@@ -18,7 +18,7 @@ class DashboardController extends Controller
     }
     public function index()
     {
-        OrderSyncJob::dispatch(auth()->user()->id);
+        // OrderSyncJob::dispatch(auth()->user()->id);
         return $this->render('Dashboard');
     }
     public function orderSeacrhfilter(Request $request)
