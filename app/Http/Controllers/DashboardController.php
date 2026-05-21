@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProductSyncJob;
 use Illuminate\Http\Request;
 use App\Models\Products\Product;
 use App\Models\ProductClassification;
@@ -21,6 +22,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user   = auth()->user();
+        ProductSyncJob::dispatch($user->id);
         $userId = $user->id;
 
         // ── Product counts ────────────────────────────────────────────────────
