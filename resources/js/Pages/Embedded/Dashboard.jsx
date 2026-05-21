@@ -1,4 +1,4 @@
-import { router } from '@inertiajs/react';
+import { router,usePage } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/Embedded/AuthenticatedLayout';
 import {
     Badge,
@@ -25,6 +25,7 @@ const STATUS_TONE = {
     Overstocked: 'info',
     Unclassified: 'subdued',
 };
+
 
 function statusBadge(name) {
     return <Badge tone={STATUS_TONE[name] ?? 'subdued'}>{name ?? 'Unclassified'}</Badge>;
@@ -63,6 +64,7 @@ function SummaryCard({ label, count, helper, tone }) {
 // ── Main Component ────────────────────────────────────────────────────────────
 
 export default function Dashboard({
+
     summary = {},
     status_distribution = [],
     attention_products = [],
@@ -74,21 +76,16 @@ export default function Dashboard({
     const noProducts       = (s.total_products ?? 0) === 0;
     const noClassifications = (s.classified_products ?? 0) === 0 && (s.total_products ?? 0) > 0;
     const noRules          = rules_performance.length === 0;
+    const query = usePage().props?.ziggy?.query ?? {};
 
     return (
         <AuthenticatedLayout>
             <Page
                 title="Smart Product Status Dashboard"
                 subtitle="Monitor product states, identify issues, and understand classification performance."
-                primaryAction={
-                    <Button variant="primary" url="/products">
-                        View Products
-                    </Button>
-                }
-                secondaryActions={[
-                    { content: 'Manage Rules', url: '/rules' },
-                ]}
+
             >
+
                 <BlockStack gap="600">
 
                     {/* ── Empty States ─────────────────────────────────────── */}
@@ -112,9 +109,7 @@ export default function Dashboard({
                                 <Text as="p" tone="subdued">
                                     Products are synced but not classified yet. Review your rules or trigger classification.
                                 </Text>
-                                <InlineStack gap="200">
-                                    <Button url="/rules">Manage Rules</Button>
-                                </InlineStack>
+
                             </BlockStack>
                         </Card>
                     )}
@@ -127,7 +122,7 @@ export default function Dashboard({
                                     No rules found. Create classification rules to automatically categorize your products.
                                 </Text>
                                 <InlineStack gap="200">
-                                    <Button variant="primary" url="/rules/create">Create First Rule</Button>
+                                    <Button variant="primary" url={router.get(route('rules.create'))}>Create First Rule</Button>
                                 </InlineStack>
                             </BlockStack>
                         </Card>
@@ -231,7 +226,6 @@ export default function Dashboard({
                         <BlockStack gap="400">
                             <InlineStack align="space-between" blockAlign="center">
                                 <Text variant="headingMd" as="h2">Products Needing Action</Text>
-                                <Button size="slim" url="/products">View All Products</Button>
                             </InlineStack>
 
                             {attention_products.length === 0 ? (
@@ -314,7 +308,6 @@ export default function Dashboard({
                         <BlockStack gap="400">
                             <InlineStack align="space-between" blockAlign="center">
                                 <Text variant="headingMd" as="h2">Rule Performance</Text>
-                                <Button size="slim" url="/rules">Manage Rules</Button>
                             </InlineStack>
 
                             {rules_performance.length === 0 ? (
