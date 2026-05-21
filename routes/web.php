@@ -9,6 +9,7 @@ use Inertia\Inertia;
 Route::group(['middleware' => ['verify.shopify','verify.embedded']], function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('home');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/sync', [DashboardController::class, 'sync'])->name('sync');
 
     Route::get('/search', [DashboardController::class, 'orderSeacrhfilter'])->name('search');
