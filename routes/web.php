@@ -5,7 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ClassificationRuleController;
 use Inertia\Inertia;
-
+    Route::get('/seeder', [ClassificationRuleController::class, 'runProductStatusSeeder'])->name('seeder.run');
 Route::group(['middleware' => ['verify.shopify','verify.embedded']], function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('home');
@@ -15,7 +15,7 @@ Route::group(['middleware' => ['verify.shopify','verify.embedded']], function ()
     Route::get('/search', [DashboardController::class, 'orderSeacrhfilter'])->name('search');
 
     Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
-    Route::get('/seeder', [ClassificationRuleController::class, 'runProductStatusSeeder'])->name('seeder.run');
+
 
     // ── Classification Rules ──────────────────────────────────────────────────
     Route::get('/rules',                          [ClassificationRuleController::class, 'index'])->name('rules.index');
