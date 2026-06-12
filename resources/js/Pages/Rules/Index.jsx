@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import AuthenticatedLayout from '@/Layouts/Embedded/AuthenticatedLayout';
+// import AuthenticatedLayout from '@/Layouts/Embedded/AuthenticatedLayout';
 import {
     Badge,
     BlockStack,
@@ -175,7 +175,7 @@ export default function Index({ rules = [] }) {
     // ── Render ────────────────────────────────────────────────────────────────
 
     return (
-        <AuthenticatedLayout>
+        <>
             <Page
                 title="Rules"
                 subtitle="Define conditions to automatically classify products and assign statuses."
@@ -234,6 +234,6 @@ export default function Index({ rules = [] }) {
                     </BlockStack>
                 </Modal.Section>
             </Modal>
-        </AuthenticatedLayout>
+        </>
     );
 }

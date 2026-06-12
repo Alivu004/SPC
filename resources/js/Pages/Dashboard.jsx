@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/Embedded/AuthenticatedLayout';
+// import AuthenticatedLayout from '@/Layouts/Embedded/AuthenticatedLayout';
 import {
     Badge,
     Banner,
@@ -43,7 +43,7 @@ export default function Dashboard({
         : 'Never';
 
     return (
-        <AuthenticatedLayout>
+        <>
             <Page
                 title="Dashboard"
                 primaryAction={
@@ -152,6 +152,6 @@ export default function Dashboard({
 
                 </BlockStack>
             </Page>
-        </AuthenticatedLayout>
+        </>
     );
 }

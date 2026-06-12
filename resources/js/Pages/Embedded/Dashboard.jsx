@@ -1,5 +1,5 @@
 import { router,usePage } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/Embedded/AuthenticatedLayout';
+// import AuthenticatedLayout from '@/Layouts/Embedded/AuthenticatedLayout';
 import {
     Badge,
     BlockStack,
@@ -79,7 +79,7 @@ export default function Dashboard({
     const query = usePage().props?.ziggy?.query ?? {};
 
     return (
-        <AuthenticatedLayout>
+        <>
             <Page
                 title="Smart Product Status Dashboard"
                 subtitle="Monitor product states, identify issues, and understand classification performance."
@@ -355,6 +355,6 @@ export default function Dashboard({
 
                 </BlockStack>
             </Page>
-        </AuthenticatedLayout>
+        </>
     );
 }
