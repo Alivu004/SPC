@@ -114,7 +114,7 @@ export default function Dashboard({
                         </Card>
                     )}
 
-                    {!noProducts && noRules && (
+                    {/* {!noProducts  && ( */}
                         <Card>
                             <BlockStack gap="200">
                                 <Text variant="headingMd" as="h2">No Rules Created</Text>
@@ -126,7 +126,7 @@ export default function Dashboard({
                                 </InlineStack>
                             </BlockStack>
                         </Card>
-                    )}
+                    {/* )} */}
 
                     {/* ── 1. Summary Cards ──────────────────────────────────── */}
                     <BlockStack gap="300">
