@@ -60,7 +60,7 @@ class ClassificationRuleController extends Controller
             'conditions.*.field_key'      => "required|string|in:{$fieldKeys}",
             'conditions.*.operator'       => "required|string|in:{$operators}",
             'conditions.*.value'          => 'nullable|string',
-            'conditions.*.value_type'     => 'nullable|string|max:50',
+            // 'conditions.*.value_type'     => 'nullable|string|max:50',
         ];
     }
 
