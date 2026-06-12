@@ -117,7 +117,6 @@ class ClassificationRuleController extends Controller
     {
         logger()->info('Storing new classification rule', ['request_data' => $request->all()]);
         // dd($request->all());
-        dd($request->all());
         $data = $request->validate($this->validationRules());
         $userId = Auth::id();
 
