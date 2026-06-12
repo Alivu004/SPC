@@ -18,7 +18,9 @@ export default function Create({ product_statuses, allowed_field_keys, allowed_o
         try {
             const response = await fetch(route('rules.store', query), {
                 method: 'POST',
-
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(data),
             });
 
