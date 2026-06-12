@@ -11,13 +11,24 @@ export default function Create({ product_statuses, allowed_field_keys, allowed_o
     const query      = usePage().props?.ziggy?.query ?? {};
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (data) => {
-        console.log('Submitting new rule with data:', data);
+    const handleSubmit = async (data) => {
+        console.log('Submitting new rule with data 12:', data);
         setLoading(true);
-        router.post(route('rules.store', query), data, {
-            onSuccess: () => setLoading(false),
-            onError:   () => setLoading(false),
-        });
+
+        try {
+            const response = await fetch(route('rules.store', query), {
+                method: 'POST',
+
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) throw new Error('Request failed');
+
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const goToIndex = () => router.get(route('rules.index', query));
