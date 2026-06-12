@@ -121,9 +121,9 @@ export default function Dashboard({
                                 <Text as="p" tone="subdued">
                                     No rules found. Create classification rules to automatically categorize your products.
                                 </Text>
-                                <InlineStack gap="200">
+                                {/* <InlineStack gap="200">
                                     <Button variant="primary" url={router.get(route('rules.create' , query))}>Create First Rule</Button>
-                                </InlineStack>
+                                </InlineStack> */}
                             </BlockStack>
                         </Card>
                     )}
