@@ -117,9 +117,7 @@ class ClassificationRuleController extends Controller
     {
         logger()->info('Storing new classification rule', ['request_data' => $request->all()]);
         $data = $request->validate($this->validationRules());
-
-        DB::transaction(function () use ($data) {
-            $userId = Auth::id();
+        $userId = Auth::id();
 
             $rule = ClassificationRule::create([
                 'user_id'           => $userId,
@@ -142,7 +140,6 @@ class ClassificationRuleController extends Controller
                     'sort_order'               => $index,
                 ]);
             }
-        });
         dd('Rule stored successfully.');
         return redirect()->route('rules.index', request()->only('shop', 'hmac', 'host', 'timestamp', 'locale', 'session'))
             ->with('success', 'Rule created successfully.');
