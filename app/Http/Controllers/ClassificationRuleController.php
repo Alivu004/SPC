@@ -141,7 +141,6 @@ class ClassificationRuleController extends Controller
                     'sort_order'               => $index,
                 ]);
             }
-        dd('Rule stored successfully.');
         return redirect()->route('rules.index', request()->only('shop', 'hmac', 'host', 'timestamp', 'locale', 'session'))
             ->with('success', 'Rule created successfully.');
     }
