@@ -175,7 +175,7 @@ export default function Index({ rules = [] }) {
     // ── Render ────────────────────────────────────────────────────────────────
 
     return (
-        <>
+        <AuthenticatedLayout>
             <Page
                 title="Rules"
                 subtitle="Define conditions to automatically classify products and assign statuses."
@@ -204,7 +204,7 @@ export default function Index({ rules = [] }) {
                 </BlockStack>
             </Page>
 
-
+            {/* ── Delete Confirmation Modal ── */}
             <Modal
                 open={deleteModalOpen}
                 onClose={closeDeleteModal}
@@ -234,6 +234,6 @@ export default function Index({ rules = [] }) {
                     </BlockStack>
                 </Modal.Section>
             </Modal>
-        </>
+        </AuthenticatedLayout>
     );
 }

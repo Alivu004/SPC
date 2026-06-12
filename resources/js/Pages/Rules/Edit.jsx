@@ -40,7 +40,7 @@ export default function Edit({ rule: serverRule, product_statuses, allowed_field
     const goToIndex = () => router.get(route('rules.index', query));
 
     return (
-        <>
+        <AuthenticatedLayout>
             <Page
                 title={`Edit Rule: ${rule.name}`}
                 subtitle="Update the conditions, status assignment, or configuration of this rule."
@@ -62,6 +62,6 @@ export default function Edit({ rule: serverRule, product_statuses, allowed_field
                     />
                 </BlockStack>
             </Page>
-        </>
+        </AuthenticatedLayout>
     );
 }

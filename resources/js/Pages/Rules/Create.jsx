@@ -22,7 +22,7 @@ export default function Create({ product_statuses, allowed_field_keys, allowed_o
     const goToIndex = () => router.get(route('rules.index', query));
 
     return (
-        <>
+        <AuthenticatedLayout>
             <Page
                 title="Create Rule"
                 subtitle="Set up conditions to automatically classify products and assign a status."
@@ -43,6 +43,6 @@ export default function Create({ product_statuses, allowed_field_keys, allowed_o
                     />
                 </BlockStack>
             </Page>
-        </>
+        </AuthenticatedLayout>
     );
 }
