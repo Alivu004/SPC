@@ -273,7 +273,7 @@ export default function RuleForm({
     };
 
     const handleSubmit = () => {
-        if (!validate()) return;
+        // if (!validate()) return;
         onSubmit?.({
             name,
             description,

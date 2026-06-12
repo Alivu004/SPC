@@ -115,6 +115,7 @@ class ClassificationRuleController extends Controller
 
     public function store(Request $request)
     {
+        logger()->info('Storing new classification rule', ['request_data' => $request->all()]);
         $data = $request->validate($this->validationRules());
 
         DB::transaction(function () use ($data) {

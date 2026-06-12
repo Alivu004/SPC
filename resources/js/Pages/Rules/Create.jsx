@@ -12,6 +12,7 @@ export default function Create({ product_statuses, allowed_field_keys, allowed_o
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = (data) => {
+        console.log('Submitting new rule with data:', data);
         setLoading(true);
         router.post(route('rules.store', query), data, {
             onSuccess: () => setLoading(false),
