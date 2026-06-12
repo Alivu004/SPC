@@ -43,7 +43,7 @@ export default function Dashboard({
         : 'Never';
 
     return (
-        <AuthenticatedLayout>
+        <>
             <Page
                 title="Dashboard"
                 primaryAction={
@@ -152,6 +152,6 @@ export default function Dashboard({
 
                 </BlockStack>
             </Page>
-        </AuthenticatedLayout>
+        </>
     );
 }
