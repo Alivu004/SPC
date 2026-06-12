@@ -114,7 +114,7 @@ export default function Dashboard({
                         </Card>
                     )}
 
-                    {/* {!noProducts  && ( */}
+                    {!noProducts && noRules && (
                         <Card>
                             <BlockStack gap="200">
                                 <Text variant="headingMd" as="h2">No Rules Created</Text>
@@ -126,7 +126,7 @@ export default function Dashboard({
                                 </InlineStack>
                             </BlockStack>
                         </Card>
-                    {/* )} */}
+                    )}
 
                     {/* ── 1. Summary Cards ──────────────────────────────────── */}
                     <BlockStack gap="300">
@@ -310,16 +310,7 @@ export default function Dashboard({
                                 <Text variant="headingMd" as="h2">Rule Performance</Text>
                             </InlineStack>
 
-                            {rules_performance.length === 0 ? (
-                                <BlockStack gap="200">
-                                    <Text as="p" tone="subdued">
-                                        No rules created yet.
-                                    </Text>
-                                    <InlineStack>
-                                        <Button variant="primary" url={router.get(route('rules.create', query)) }>Create First Rule</Button>
-                                    </InlineStack>
-                                </BlockStack>
-                            ) : (
+                           (
                                 <DataTable
                                     columnContentTypes={['text', 'text', 'numeric', 'text']}
                                     headings={['Rule Name', 'Assigned Status', 'Matched Products', 'Rule Status']}
@@ -332,7 +323,7 @@ export default function Dashboard({
                                         </Badge>,
                                     ])}
                                 />
-                            )}
+                            )
                         </BlockStack>
                     </Card>
 
