@@ -15,6 +15,7 @@ Route::group(['middleware' => ['verify.shopify','verify.embedded']], function ()
     Route::get('/search', [DashboardController::class, 'orderSeacrhfilter'])->name('search');
 
     Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
+    Route::get('/seeder', [ClassificationRuleController::class, 'runProductStatusSeeder'])->name('seeder.run');
 
     // ── Classification Rules ──────────────────────────────────────────────────
     Route::get('/rules',                          [ClassificationRuleController::class, 'index'])->name('rules.index');

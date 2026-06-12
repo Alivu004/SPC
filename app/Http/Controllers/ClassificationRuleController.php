@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Artisan;
+use Database\Seeders\ProductStatusSeeder;
 
 class ClassificationRuleController extends Controller
 {
@@ -60,7 +62,7 @@ class ClassificationRuleController extends Controller
             'conditions.*.field_key'      => "required|string|in:{$fieldKeys}",
             'conditions.*.operator'       => "required|string|in:{$operators}",
             'conditions.*.value'          => 'nullable|string',
-            // 'conditions.*.value_type'     => 'nullable|string|max:50',
+            'conditions.*.value_type'     => 'nullable|string|max:50',
         ];
     }
 
@@ -247,4 +249,14 @@ class ClassificationRuleController extends Controller
 
         return back()->with('success', $rule->is_active ? 'Rule enabled.' : 'Rule disabled.');
     }
+
+    public function runProductStatusSeeder()
+{
+    Artisan::call('db:seed', [
+        '--class' => ProductStatusSeeder::class,
+        '--force' => true,
+    ]);
+
+    return response()->json(['message' => 'ProductStatusSeeder ran successfully.']);
+}
 }
