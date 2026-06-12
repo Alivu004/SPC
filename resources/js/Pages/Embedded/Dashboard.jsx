@@ -122,7 +122,7 @@ export default function Dashboard({
                                     No rules found. Create classification rules to automatically categorize your products.
                                 </Text>
                                 <InlineStack gap="200">
-                                    <Button variant="primary" url={router.get(route('rules.create'))}>Create First Rule</Button>
+                                    <Button variant="primary" url={router.get(route('rules.create' , query))}>Create First Rule</Button>
                                 </InlineStack>
                             </BlockStack>
                         </Card>
@@ -316,7 +316,7 @@ export default function Dashboard({
                                         No rules created yet.
                                     </Text>
                                     <InlineStack>
-                                        <Button variant="primary" url="/rules/create">Create First Rule</Button>
+                                        <Button variant="primary" url={router.get(route('rules.create', query)) }>Create First Rule</Button>
                                     </InlineStack>
                                 </BlockStack>
                             ) : (
