@@ -28,7 +28,7 @@ Route::group(['middleware' => ['verify.shopify','verify.embedded']], function ()
     // get all registered webhooks for the shop
     Route::get('/webhooks', function () {
         $shop = auth()->user();
-        $webhooks = $shop->api()->rest('GET', '/admin/api/2024-01/webhooks.json');
+        $webhooks = $shop->api()->rest('GET', '/admin/api/2026-04/webhooks.json');
         return $webhooks;
     })->name('webhooks.index');
 
