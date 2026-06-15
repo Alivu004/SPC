@@ -1,5 +1,16 @@
 <?php
 
+$shopifyWebhookAddress = static function (string $key, string $path): string {
+    $address = env($key);
+    $appUrl = rtrim((string) env('APP_URL', 'http://localhost'), '/');
+
+    if (is_string($address) && $address !== '') {
+        return str_replace('${APP_URL}', $appUrl, $address);
+    }
+
+    return $appUrl . $path;
+};
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -387,31 +398,31 @@ return [
     'webhooks' => [
         [
             'topic' => env('SHOPIFY_WEBHOOK_1_TOPIC'),
-            'address' => env('SHOPIFY_WEBHOOK_1_ADDRESS')
+            'address' => $shopifyWebhookAddress('SHOPIFY_WEBHOOK_1_ADDRESS', '/webhook/app-uninstalled')
         ],
         [
             'topic' => env('SHOPIFY_WEBHOOK_2_TOPIC'),
-            'address' => env('SHOPIFY_WEBHOOK_2_ADDRESS')
+            'address' => $shopifyWebhookAddress('SHOPIFY_WEBHOOK_2_ADDRESS', '/webhook/products-create')
         ],
         [
             'topic' => env('SHOPIFY_WEBHOOK_3_TOPIC'),
-            'address' => env('SHOPIFY_WEBHOOK_3_ADDRESS')
+            'address' => $shopifyWebhookAddress('SHOPIFY_WEBHOOK_3_ADDRESS', '/webhook/products-delete')
         ],
         [
             'topic' => env('SHOPIFY_WEBHOOK_4_TOPIC'),
-            'address' => env('SHOPIFY_WEBHOOK_4_ADDRESS')
+            'address' => $shopifyWebhookAddress('SHOPIFY_WEBHOOK_4_ADDRESS', '/webhook/products-update')
         ],
                 [
             'topic' => env('SHOPIFY_WEBHOOK_5_TOPIC'),
-            'address' => env('SHOPIFY_WEBHOOK_5_ADDRESS')
+            'address' => $shopifyWebhookAddress('SHOPIFY_WEBHOOK_5_ADDRESS', '/webhook/orders-create')
         ],
                 [
             'topic' => env('SHOPIFY_WEBHOOK_6_TOPIC'),
-            'address' => env('SHOPIFY_WEBHOOK_6_ADDRESS')
+            'address' => $shopifyWebhookAddress('SHOPIFY_WEBHOOK_6_ADDRESS', '/webhook/orders-delete')
         ],
                 [
             'topic' => env('SHOPIFY_WEBHOOK_7_TOPIC'),
-            'address' => env('SHOPIFY_WEBHOOK_7_ADDRESS')
+            'address' => $shopifyWebhookAddress('SHOPIFY_WEBHOOK_7_ADDRESS', '/webhook/orders-updated')
         ],
     ],
 

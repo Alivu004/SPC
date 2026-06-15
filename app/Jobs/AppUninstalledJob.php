@@ -60,20 +60,19 @@ class AppUninstalledJob extends \Osiset\ShopifyApp\Messaging\Jobs\AppUninstalled
         $user = User::where('name', $shop->name)->first();
         $products = $user->products;
         foreach ($products as $product) {
-            $product->productImages()->delete();
             $products->productVarients()->delete();
             $product->delete();
         }
-        $orders = $user->orders;
-        foreach ($orders as $order) {
-            $orders->orderLineItems()->delete();
-            $order->orderFulfillments()->delete();
-            $order->orderShippingAddress()->delete();
-            $order->orderCustomer()->delete();
-            $order->delete();
-        }
-            $shopId = $shop->getId();
-            $shopCommand->softDelete($shopId);
+        // $orders = $user->orders;
+        // foreach ($orders as $order) {
+        //     $orders->orderLineItems()->delete();
+        //     $order->orderFulfillments()->delete();
+        //     $order->orderShippingAddress()->delete();
+        //     $order->orderCustomer()->delete();
+        //     $order->delete();
+        // }
+            // $shopId = $shop->getId();
+            // $shopCommand->softDelete($shopId);
 
         $user->delete();
         Log::info('App uninstalled for shop: ' . $this->shopDomain->toNative());
