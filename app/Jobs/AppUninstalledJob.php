@@ -2,17 +2,22 @@
 
 namespace App\Jobs;
 
-use stdClass;
+
+
+use App\Models\Products\Product;
+use App\Models\ProductVariant;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Osiset\ShopifyApp\Contracts\Commands\Shop;
-use Osiset\ShopifyApp\Actions\CancelCurrentPlan;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Osiset\ShopifyApp\Objects\Values\ShopDomain;
+use stdClass;
+use Osiset\ShopifyApp\Contracts\Commands\Shop;
 use Osiset\ShopifyApp\Contracts\Queries\Shop as QueriesShop;
+use Osiset\ShopifyApp\Actions\CancelCurrentPlan;
 
 class AppUninstalledJob extends \Osiset\ShopifyApp\Messaging\Jobs\AppUninstalledJob
 {
@@ -31,7 +36,8 @@ class AppUninstalledJob extends \Osiset\ShopifyApp\Messaging\Jobs\AppUninstalled
      * @var object
      */
     public $data;
-    public $tries = 1;
+    public $timeout = 9999999999999999;
+    public $tries = 2;
 
     /**
      * Create a new job instance.
@@ -47,6 +53,8 @@ class AppUninstalledJob extends \Osiset\ShopifyApp\Messaging\Jobs\AppUninstalled
         $this->data = $data;
     }
 
+    // public function
+
     /**
      * Execute the job.
      *
@@ -57,8 +65,15 @@ class AppUninstalledJob extends \Osiset\ShopifyApp\Messaging\Jobs\AppUninstalled
         $this->shopDomain = ShopDomain::fromNative($this->shopDomain);
 
         $shop = $shopQuery->getByDomain($this->shopDomain);
+
         $user = User::where('name', $shop->name)->first();
-        $products = $user->products;
+
+        if (!empty($user)) {
+
+            $shopId = $shop->getId();
+
+            Product::where('user_id', $user->id)->delete();
+            $products = $user->products;
         foreach ($products as $product) {
             $product->productImages()->delete();
             $products->productVarients()->delete();
@@ -72,9 +87,11 @@ class AppUninstalledJob extends \Osiset\ShopifyApp\Messaging\Jobs\AppUninstalled
             $order->orderCustomer()->delete();
             $order->delete();
         }
-        $shopId = $shop->getId();
-        $shopCommand->softDelete($shopId);
-        Log::info('App uninstalled for shop: ' . $this->shopDomain->toNative());
+            // ProductImage::where('user_id', $user->id)->delete();
+            //DELETING COMMANDS
+            $shopCommand->softDelete($shopId);
+        }
+
         return true;
     }
 }
