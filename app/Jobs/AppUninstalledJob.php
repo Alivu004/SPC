@@ -60,7 +60,7 @@ class AppUninstalledJob extends \Osiset\ShopifyApp\Messaging\Jobs\AppUninstalled
         $user = User::where('name', $shop->name)->first();
         $products = $user->products;
         foreach ($products as $product) {
-            $products->productVarients()->delete();
+            $product->productVarients()->delete();
             $product->delete();
         }
 
